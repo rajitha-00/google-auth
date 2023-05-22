@@ -6,18 +6,37 @@
     <div class="signGout" v-if="isSignedIn">
       <button  @click="handleSignOut">logout</button>
     </div>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
+
     <h3>Check this out</h3>
-    
-   
+<!-- google Signin -->
+    <div class="container">
+      <div class="googleSignIn">
+        <h2>Google Signin</h2>
+        <button @click="handleSignInGoogle">login</button>
+      </div>
+<!-- twitter signin -->
+      <div class="twitterSignIn">
+        <h2>Twitter Signin</h2>
+        <button @click="handleSignInTwitter">login</button>
+      </div>
+<!-- facebook signin -->
+      <div class="facebookSignIn">
+        <h2>Facebook Signin</h2>
+        <button @click="handleSignInFacebook">login</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import firebaseConfig from '../firebaseConfig'
+import { getAuth, signInWithPopup,signOut ,  GoogleAuthProvider } from "firebase/auth";
+
+const provider = new GoogleAuthProvider();
+const auth = getAuth();
+
+firebaseConfig
+
 export default {
   name: 'HelloWorld',
   props: {
@@ -28,8 +47,34 @@ export default {
         user: '',
         isSignedIn: false,
       }
+    },
+  methods: {
+    handleSignInGoogle(){
+      signInWithPopup(auth, provider)
+        .then((result) => {
+
+          // console.log(result.user.displayName);
+          this.user = result.user.displayName;
+          this.isSignedIn = true;
+        }).catch((error) => {
+          console.log(error)
+        });
+    },
+
+    handleSignOut(){
+      signOut(auth).then(() => {
+        this.user = '';
+        this.isSignedIn = false;
+      }).catch((error) => {
+          console.log(error)
+      });
     }
   }
+
+}
+
+  
+  
 
 </script>
 
